@@ -97,7 +97,7 @@ $(function() {
       this.gameOver();
     }
     for (tile in this.tiles) {
-      if (tile.value === 2048) {
+      if (tile.value === 2048 && !this.victory) {
         this.playerWins();
       }
     }
