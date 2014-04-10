@@ -1,4 +1,5 @@
 $(function() {
+  var possibleTileValues = ['2','4'];
 // ***** Game Section *****
   function Game () {
     this.boardView = $('.grid-container');
@@ -20,11 +21,22 @@ $(function() {
   }
 
   Game.prototype.addNewTile = function () {
-    // Create new Tile object and push into game.tiles
+    var value = this.getTileValue(),
+      location = this.getTileLocation();
+
+    this.tiles.push(new Tile(value, location));
     this.updateView();
   }
 
-  Game.prototype.enablePlayerControls = function () { // this name may change
+  Game.prototype.getTileValue = function () {
+    return possibleTileValues[Math.floor(Math.random() * 2)]
+  }
+
+  Game.prototype.getTileLocation = function () {
+    return 1;
+  }
+
+  Game.prototype.enablePlayerControls = function () { // Make it something to easily reset -- don't get attached to the name
     // Set up some bindings for player interaction
     // Functionality:
     //    arrow keys to edit each tile in game.tiles
@@ -33,7 +45,6 @@ $(function() {
   } 
 
   Game.prototype.disablePlayerControls = function () {
-
   }
 
   Game.prototype.updateView = function () {
@@ -58,7 +69,8 @@ $(function() {
 // ***** Tiles Section *****
   function Tile (value, location) {
     this.value = value; 
-    this.location = location; // Will be an array [row, column] -- ex: tile-position-0-0 (-row-column)
+    this.location = location // Will be an array [row, column] -- ex: tile-position-0-0 (-row-column)
+    console.log(this.location);
   }
 
 // ***** Driver Code *****
