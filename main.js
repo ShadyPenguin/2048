@@ -1,5 +1,8 @@
 $(function() {
   function Game() {
+    this.board = $('.grid-container');
+    this.tiles = [];
+    this.tilesView = $('.tile-container');
     this.init();
   } 
 
@@ -13,10 +16,18 @@ $(function() {
   }
 
   Game.prototype.addStarterTile = function () {
-    console.log('started')
   }
 
   Game.prototype.addNewTile = function() {
+  }
+
+  Game.prototype.resetBoard = function () {
+    this.tiles = [];
+    this.tilesView.html('');
+  }
+
+  Game.prototype.updateView = function() {
+    kkk
   }
 
   function Tile() {
