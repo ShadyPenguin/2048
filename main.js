@@ -1,16 +1,17 @@
 $(function() {
 // ***** Game Section *****
-  function Game() {
+  function Game () {
     this.boardView = $('.grid-container');
-    this.tiles = [];
     this.tilesView = $('.tile-container');
+    this.tiles = [];
 
     this.init();
   } 
 
-  Game.prototype.init = function() {
+  Game.prototype.init = function () {
     this.createBoard();
     this.updateView();
+    this.enablePlayerControls();
   }
 
   Game.prototype.createBoard = function () {
@@ -18,21 +19,33 @@ $(function() {
     this.addNewTile();
   }
 
-  Game.prototype.addNewTile = function() {
+  Game.prototype.addNewTile = function () {
     // Create new Tile object and push into game.tiles
     this.updateView();
   }
 
-  Game.prototype.updateView = function() {
+  Game.prototype.enablePlayerControls = function () { // this name may change
+    // Set up some bindings for player interaction
+    // Functionality:
+    //    arrow keys to edit each tile in game.tiles
+    //      this will be the heart of the game 
+    //    update view
+  } 
+
+  Game.prototype.disablePlayerControls = function () {
+
+  }
+
+  Game.prototype.updateView = function () {
     // Read through game.tiles and populate screen (maybe?)
     // There may be a better way, don't invest too much time into this
   }
 
-  Game.prototype.playerLose = function() {
+  Game.prototype.playerLose = function () {
     // display lose view
   }
 
-  Game.prototype.playerWin = function() {
+  Game.prototype.playerWin = function () {
     // display win view
   }
 
@@ -43,9 +56,9 @@ $(function() {
   }
 
 // ***** Tiles Section *****
-  function Tile(value, location) {
-    this.value = value;
-    this.location = location;
+  function Tile (value, location) {
+    this.value = value; 
+    this.location = location; // Will be an array [row, column] -- ex: tile-position-0-0 (-row-column)
   }
 
 // ***** Driver Code *****
