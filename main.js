@@ -1,5 +1,5 @@
 // Currently Working On:
-//    Game.getTileLocation
+//    Game.setTileLocation
 
 
 $(function() {
@@ -12,13 +12,15 @@ $(function() {
     this.tilesView = $('.tile-container');
     this.tiles = [];
 
+
     this.init();
   } 
 
   Game.prototype.init = function () {
+    this.victory = false;
     this.createBoard();
-    this.updateView();
-    this.enablePlayerControls();
+    // this.updateView();
+    // this.enablePlayerControls();
   }
 
   Game.prototype.createBoard = function () {
@@ -31,7 +33,7 @@ $(function() {
       location = this.setTileLocation();
 
     this.tiles.push(new Tile(value, location));
-    this.updateView();
+    // this.updateView();
   }
 
   Game.prototype.setTileValue = function () {
@@ -64,12 +66,14 @@ $(function() {
     return Math.floor(Math.random() * value);
   }
 
+/*
   Game.prototype.enablePlayerControls = function () { // Make it something to easily reset -- don't get attached to the name
     // Set up some bindings for player interaction
     // Functionality:
     //    arrow keys to edit each tile in game.tiles
-    //      this will be the heart of the game 
-    //    update view
+
+    // this.checkGameEndingConditions();
+    // this.updateView();
   } 
 
   Game.prototype.disablePlayerControls = function () {
@@ -77,14 +81,34 @@ $(function() {
 
   Game.prototype.updateView = function () {
     // Read through game.tiles and populate screen (maybe?)
-    // There may be a better way, don't invest too much time into this
+    // There may be a better way -- don't invest too much time into this right now
   }
 
-  Game.prototype.playerLose = function () {
-    // display lose view
+  Game.prototype.anyMovesLeft = function () {
+    // return boolean value
   }
 
-  Game.prototype.playerWin = function () {
+  Game.prototype.checkForPossibleMoves = function () {
+    // more core game logicsss
+  }
+
+  Game.prototype.checkGameEndingConditions = function () {
+    if (this.tiles.length == 16 && !this.anyMovesLeft()) {
+      this.gameOver();
+    }
+    for (tile in this.tiles) {
+      if (tile.value === 2048) {
+        this.playerWins();
+      }
+    }
+  }
+
+  Game.prototype.gameOver = function () {
+     // display lose view
+  }
+
+  Game.prototype.playerWins = function () {
+    this.victory = true;
     // display win view
   }
 
@@ -93,6 +117,7 @@ $(function() {
     this.tilesView.html('');
     this.init();
   }
+*/
 
 // ***** Tiles Section *****
   function Tile (value, location) {
