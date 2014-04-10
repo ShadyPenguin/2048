@@ -1,10 +1,10 @@
 // Currently Working On:
 //    Game.setTileLocation
 
-
 $(function() {
   var possibleTileValues = ['2','4'],
-    possibleTileLocations = ['0', '1', '2', '3'];
+    possibleTileLocations = ['0', '1', '2', '3'],
+    allPossibleTileLocations = {};
 
 // ***** Game Section *****
   function Game () {
@@ -12,7 +12,7 @@ $(function() {
     this.tilesView = $('.tile-container');
     this.tiles = [];
 
-
+    this.fillAllPossibleTileLocations();
     this.init();
   } 
 
@@ -37,31 +37,57 @@ $(function() {
   }
 
   Game.prototype.setTileValue = function () {
-    return possibleTileValues[this.getPossibleTileIndex('value')]
+    return possibleTileValues[this.getPossibleTileIndex('value')];
   }
 
   Game.prototype.setTileLocation = function () {
     var row,
-      column;
+      column,
+      availableLocations = allPossibleTileLocations;
 
     // First tile of game
     if (this.tiles.length === 0) {
-      row = possibleTileLocations[this.getPossibleTileIndex('location')];
-      column = possibleTileLocations[this.getPossibleTileIndex('location')];
-      return [row, column]
+      return this.findFirstTileLocation(row, column);
     }
 
-    // All other tiles
-    
-    return ['1', '2']; // just tester code
+    // Deletes each 'occupied' element of the board from possible options
+    this.tiles.forEach(function (element) {
+      delete availableLocations[element.location[0]+element.location[1]]
+    })
+
+    // Select a random element in availalbeLocations array
+    return this.getPossibleTileIndex(availableLocations);
+
+  }
+
+  Game.prototype.findFirstTileLocation = function (row, column) {
+    row = possibleTileLocations[this.getPossibleTileIndex('location')];
+    column = possibleTileLocations[this.getPossibleTileIndex('location')];
+    return [row, column];
+  }
+
+  Game.prototype.findNextTileLocation = function (row, column) {
+
+  }
+
+  Game.prototype.fillAllPossibleTileLocations = function () {
+    var row, column;
+    for (row in possibleTileLocations) {
+      for (column in possibleTileLocations) {
+        allPossibleTileLocations[row+''+column] = [row,column]
+      }
+    }
   }
 
   Game.prototype.getPossibleTileIndex = function (type) {
-    var value;
+    var value, keys;
     if (type === 'location') {
       value = 4;
     } else if (type === 'value') {
       value = 2;
+    } else {
+      keys = Object.keys(type);
+      return type[keys[ keys.length * Math.random() << 0]]
     }
     return Math.floor(Math.random() * value);
   }
@@ -123,8 +149,8 @@ $(function() {
   function Tile (value, location) {
     this.value = value; 
     this.location = location; // Will be an array [row, column] -- ex: class will be tile-position-0-0 (-row-column)
-    console.log(this.location);
   }
+
 
 // ***** Driver Code *****
   game = new Game();
