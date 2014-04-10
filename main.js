@@ -1,8 +1,10 @@
 $(function() {
+// ***** Game Section *****
   function Game() {
-    this.board = $('.grid-container');
+    this.boardView = $('.grid-container');
     this.tiles = [];
     this.tilesView = $('.tile-container');
+
     this.init();
   } 
 
@@ -11,27 +13,35 @@ $(function() {
   }
 
   Game.prototype.createBoard = function () {
-    this.addStarterTile();
-    this.addStarterTile();
+    // Add 2 starter tiles
   }
 
   Game.prototype.addStarterTile = function () {
+    // Create a Tile object and throw it into the game.tiles array
+    // update view
+  }
+
+  Game.prototype.updateView = function() {
+    // Read through game.tiles and populate screen
   }
 
   Game.prototype.addNewTile = function() {
+    // Add tile to game.tiles
+    // update view
   }
 
   Game.prototype.resetBoard = function () {
     this.tiles = [];
     this.tilesView.html('');
+    this.init();
   }
 
-  Game.prototype.updateView = function() {
-    kkk
-  }
-
+// ***** Tiles Section *****
   function Tile() {
+    // value
+    // location
   }
 
+// ***** Driver Code *****
   game = new Game();
 });
