@@ -1,5 +1,11 @@
+// Currently Working On:
+//    Game.getTileLocation
+
+
 $(function() {
-  var possibleTileValues = ['2','4'];
+  var possibleTileValues = ['2','4'],
+    possibleTileLocations = ['0', '1', '2', '3'];
+
 // ***** Game Section *****
   function Game () {
     this.boardView = $('.grid-container');
@@ -21,19 +27,41 @@ $(function() {
   }
 
   Game.prototype.addNewTile = function () {
-    var value = this.getTileValue(),
-      location = this.getTileLocation();
+    var value = this.setTileValue(),
+      location = this.setTileLocation();
 
     this.tiles.push(new Tile(value, location));
     this.updateView();
   }
 
-  Game.prototype.getTileValue = function () {
-    return possibleTileValues[Math.floor(Math.random() * 2)]
+  Game.prototype.setTileValue = function () {
+    return possibleTileValues[this.getPossibleTileIndex('value')]
   }
 
-  Game.prototype.getTileLocation = function () {
-    return 1;
+  Game.prototype.setTileLocation = function () {
+    var row,
+      column;
+
+    // First tile of game
+    if (this.tiles.length === 0) {
+      row = possibleTileLocations[this.getPossibleTileIndex('location')];
+      column = possibleTileLocations[this.getPossibleTileIndex('location')];
+      return [row, column]
+    }
+
+    // All other tiles
+    
+    return ['1', '2']; // just tester code
+  }
+
+  Game.prototype.getPossibleTileIndex = function (type) {
+    var value;
+    if (type === 'location') {
+      value = 4;
+    } else if (type === 'value') {
+      value = 2;
+    }
+    return Math.floor(Math.random() * value);
   }
 
   Game.prototype.enablePlayerControls = function () { // Make it something to easily reset -- don't get attached to the name
@@ -69,7 +97,7 @@ $(function() {
 // ***** Tiles Section *****
   function Tile (value, location) {
     this.value = value; 
-    this.location = location // Will be an array [row, column] -- ex: tile-position-0-0 (-row-column)
+    this.location = location; // Will be an array [row, column] -- ex: class will be tile-position-0-0 (-row-column)
     console.log(this.location);
   }
 
