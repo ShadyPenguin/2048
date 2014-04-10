@@ -10,24 +10,30 @@ $(function() {
 
   Game.prototype.init = function() {
     this.createBoard();
+    this.updateView();
   }
 
   Game.prototype.createBoard = function () {
-    // Add 2 starter tiles
-  }
-
-  Game.prototype.addStarterTile = function () {
-    // Create a Tile object and throw it into the game.tiles array
-    // update view
-  }
-
-  Game.prototype.updateView = function() {
-    // Read through game.tiles and populate screen
+    this.addNewTile();
+    this.addNewTile();
   }
 
   Game.prototype.addNewTile = function() {
-    // Add tile to game.tiles
-    // update view
+    // Create new Tile object and push into game.tiles
+    this.updateView();
+  }
+
+  Game.prototype.updateView = function() {
+    // Read through game.tiles and populate screen (maybe?)
+    // There may be a better way, don't invest too much time into this
+  }
+
+  Game.prototype.playerLose = function() {
+    // display lose view
+  }
+
+  Game.prototype.playerWin = function() {
+    // display win view
   }
 
   Game.prototype.resetBoard = function () {
@@ -37,9 +43,9 @@ $(function() {
   }
 
 // ***** Tiles Section *****
-  function Tile() {
-    // value
-    // location
+  function Tile(value, location) {
+    this.value = value;
+    this.location = location;
   }
 
 // ***** Driver Code *****
