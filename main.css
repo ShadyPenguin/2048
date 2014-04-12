@@ -18,6 +18,7 @@
       margin-top: 15px;
     }
 
+      .tile,
       .grid-cell {
         width: 106px;
         height: 106px;
@@ -31,3 +32,7 @@
         margin-left: 15px;
       }
 
+      .tile-2 {
+        position: absolute;
+        background-color: green;
+      }

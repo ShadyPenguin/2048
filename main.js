@@ -20,7 +20,7 @@ $(function() {
     var row, column;
     for (row in possibleTileLocationIndices) {
       for (column in possibleTileLocationIndices) {
-        allPossibleTileLocations[row + column] = row + column
+        allPossibleTileLocations[row + column] = row + column;
       }
     }
   }
@@ -46,48 +46,21 @@ $(function() {
   }
 
   Game.prototype.setTileValue = function () {
-    return possibleTileValues[this.getPossibleTileIndex('value')];
+    return possibleTileValues[Math.floor(Math.random() * 2)];
   }
 
   Game.prototype.setTileLocation = function () {
-    var row,
-        column,
-        availableLocations = allPossibleTileLocations;
-
-    if (this.tiles.length === 0) {
-      return this.findFirstTileLocation();
-    }
+    var keys,
+      availableLocations = allPossibleTileLocations;
 
     // Deletes each 'occupied' tile location of the board from possible options
     this.tiles.forEach(function (tile) {
       delete availableLocations[tile.location]
     })
-
+    
     // Select a value from a random key in availableLocations array
-    return this.getPossibleTileIndex(availableLocations);
-  }
-
-  Game.prototype.findFirstTileLocation = function () {
-    row    = possibleTileLocationIndices[this.getPossibleTileIndex('location')];
-    column = possibleTileLocationIndices[this.getPossibleTileIndex('location')];
-    return row + column;
-  }
-
-  Game.prototype.findNextTileLocation = function (row, column) {
-
-  }
-
-  Game.prototype.getPossibleTileIndex = function (type) {
-    var value, keys;
-    if (type === 'location') {
-      value = 4;
-    } else if (type === 'value') {
-      value = 2;
-    } else {
-      keys = Object.keys(type);
-      return keys[ keys.length * Math.random() << 0]
-    }
-    return Math.floor(Math.random() * value);
+    var keys = Object.keys(availableLocations);
+    return keys[ keys.length * Math.random() << 0];
   }
 
 /*
@@ -147,6 +120,7 @@ $(function() {
   function Tile (value, location) {
     this.value    = value;
     this.location = location;
+    console.log(location);
   }
 
 
