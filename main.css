@@ -13,7 +13,7 @@
     .grid-row {
 
     }
-    
+
     .grid-row:first-child {
       margin-top: 15px;
     }
@@ -31,6 +31,3 @@
         margin-left: 15px;
       }
 
-.tile-2 {
-  background-color: green;
-}

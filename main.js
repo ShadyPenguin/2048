@@ -1,5 +1,5 @@
 // Currently Working On:
-//    Game.setTileLocation
+//    make the tiles appear on the view
 
 $(function() {
   var possibleTileValues = ['2','4'],
@@ -50,12 +50,12 @@ $(function() {
       return this.findFirstTileLocation(row, column);
     }
 
-    // Deletes each 'occupied' element of the board from possible options
-    this.tiles.forEach(function (element) {
-      delete availableLocations[element.location[0]+element.location[1]]
+    // Deletes each 'occupied' tile location of the board from possible options
+    this.tiles.forEach(function (tile) {
+      delete availableLocations[tile.location]
     })
 
-    // Select a random element in availalbeLocations array
+    // Select a value from a random key in availableLocations array
     return this.getPossibleTileIndex(availableLocations);
 
   }
@@ -63,7 +63,7 @@ $(function() {
   Game.prototype.findFirstTileLocation = function (row, column) {
     row = possibleTileLocations[this.getPossibleTileIndex('location')];
     column = possibleTileLocations[this.getPossibleTileIndex('location')];
-    return [row, column];
+    return row + column;
   }
 
   Game.prototype.findNextTileLocation = function (row, column) {
@@ -74,7 +74,7 @@ $(function() {
     var row, column;
     for (row in possibleTileLocations) {
       for (column in possibleTileLocations) {
-        allPossibleTileLocations[row+''+column] = [row,column]
+        allPossibleTileLocations[row + column] = row + column
       }
     }
   }
@@ -148,7 +148,8 @@ $(function() {
 // ***** Tiles Section *****
   function Tile (value, location) {
     this.value = value; 
-    this.location = location; // Will be an array [row, column] -- ex: class will be tile-position-0-0 (-row-column)
+    this.location = location;
+    console.log(this.location);
   }
 
 
