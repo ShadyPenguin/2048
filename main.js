@@ -29,7 +29,7 @@ $(function() {
     this.victory = false;
     this.createBoard();
     this.updateView();
-    // this.enablePlayerControls();
+    this.bindEnablePlayerControls();
   }
 
   Game.prototype.createBoard = function () {
@@ -71,8 +71,9 @@ $(function() {
     return keys[ keys.length * Math.random() << 0];
   }
 
-/*
-  Game.prototype.enablePlayerControls = function () { // Make it something to easily reset -- don't get attached to the name
+  Game.prototype.bindEnablePlayerControls = function () {
+    $(document).on('keydown', enablePlayerControls);
+
     // Set up some bindings for player interaction
     // Functionality:
     //    arrow keys to edit each tile in game.tiles
@@ -81,6 +82,26 @@ $(function() {
     // this.updateView();
   }
 
+  function enablePlayerControls(e) {
+    if (e.keyCode == 37) {
+      console.log("left");
+      return false;
+    }
+    else if (e.keyCode == 38) {
+      console.log("up");
+      return false;
+    }
+    else if (e.keyCode == 39) {
+      console.log("right");
+      return false;
+    }
+    else if (e.keyCode == 40) {
+      console.log("down");
+      return false;
+    }
+  };
+
+/*
   Game.prototype.disablePlayerControls = function () {
   }
 
