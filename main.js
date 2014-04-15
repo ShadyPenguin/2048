@@ -28,7 +28,7 @@ $(function() {
   Game.prototype.init = function () {
     this.victory = false;
     this.createBoard();
-    // this.updateView();
+    this.updateView();
     // this.enablePlayerControls();
   }
 
@@ -42,7 +42,15 @@ $(function() {
         location = this.setTileLocation();
 
     this.tiles.push(new Tile(value, location));
-    // this.updateView();
+  }
+
+  Game.prototype.updateView = function () {
+    for (var i=0; i < this.tiles.length; i++) {
+      var tile = this.tiles[i];
+      var tileDiv = $("div#" + tile.location);
+      tileDiv.css("background-color", "blue");
+      tileDiv.html("<p>" + tile.value + "</p>");
+    }
   }
 
   Game.prototype.setTileValue = function () {
@@ -120,7 +128,6 @@ $(function() {
   function Tile (value, location) {
     this.value    = value;
     this.location = location;
-    console.log(location);
   }
 
 
