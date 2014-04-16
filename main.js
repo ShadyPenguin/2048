@@ -1,6 +1,9 @@
 // ***** Tasks *******
 //
 // improve tile movement intelligence
+// Weird behavior of tile movement:
+//   - Required to move left before you can move right
+//   - Required to move up before you can move down
 //  
 // ***** ----- *******
 var possibleTileValues          = [2, 4],
@@ -60,33 +63,33 @@ Game.prototype.setTileValue = function () {
 
 Game.prototype.setTileLocation = function () {
   var keys,
-    availableLocations = allPossibleTileLocations;
+      availableLocations = allPossibleTileLocations;
 
   // Deletes each 'occupied' tile location of the board from possible options
-  this.tiles.forEach(function (tile) {
-    delete availableLocations[tile.location]
+  $.each(this.tiles, function(index, tile) {
+    delete availableLocations[tile.row + tile.column]
   })
-  
+
   // Select a value from a random key in availableLocations array
-  var keys = Object.keys(availableLocations);
-  return keys[ keys.length * Math.random() << 0];
+  keys = Object.keys(availableLocations);
+  return keys[keys.length * Math.random() << 0];
 }
 
 Game.prototype.enablePlayerControls = function () {
   var self = this;
 
   $(document).on('keyup', function (e) {
-    if (e.keyCode == 37) {
+    if (e.keyCode === 37) {
       self.moveLeft();
     }
-    else if (e.keyCode == 38) {
-      console.log("up");
+    else if (e.keyCode === 38) {
+      self.moveUp();
     }
-    else if (e.keyCode == 39) {
-      console.log("right");
+    else if (e.keyCode === 39) {
+      self.moveRight();
     }
-    else if (e.keyCode == 40) {
-      console.log("down");
+    else if (e.keyCode === 40) {
+      self.moveDown();
     }
     game.updateView();
   })
@@ -95,9 +98,27 @@ Game.prototype.enablePlayerControls = function () {
 Game.prototype.disablePlayerControls = function () {
 }
 
-Game.prototype.moveLeft = function (direction) {
+Game.prototype.moveLeft = function () {
   $.each(this.tiles, function(index, tile) {
     tile.column -= 1;
+  })
+}
+
+Game.prototype.moveRight = function () {
+  $.each(this.tiles, function(index, tile) {
+    tile.column += 1;
+  })
+}
+
+Game.prototype.moveUp = function () {
+  $.each(this.tiles, function(index, tile) {
+    tile.row -= 1;
+  })
+}
+
+Game.prototype.moveDown = function () {
+  $.each(this.tiles, function(index, tile) {
+    tile.row += 1;
   })
 }
 
