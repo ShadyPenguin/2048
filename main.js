@@ -1,6 +1,8 @@
-// Currently Working On:
-//    make the tiles appear on the view
-
+// ***** Tasks *******
+//
+// improve tile movement intelligence
+//  
+// ***** ----- *******
 var possibleTileValues          = [2, 4],
     possibleTileLocationIndices = [0, 1, 2, 3],
     allPossibleTileLocations    = {};
@@ -94,35 +96,29 @@ Game.prototype.disablePlayerControls = function () {
 }
 
 Game.prototype.moveLeft = function (direction) {
-  var i,
-    tile;
-
-  for (i = 0; i < this.tiles.length; i++) {
-    tile = this.tiles[i]
-    if (tile.location < 5) {
-      tile.location = '0' + (tile.location - 1).toString();
-    } else {
-      tile.location = parseInt(tile.location) - 1;
-    }
-  }
-}
-
-Game.prototype.anyMovesLeft = function () {
-  // return boolean value
+  $.each(this.tiles, function(index, tile) {
+    tile.column -= 1;
+  })
 }
 
 Game.prototype.checkForPossibleMoves = function () {
   // more core game logicsss
 }
 
+Game.prototype.anyMovesLeft = function () {
+  // return boolean value
+}
+
+/*
 Game.prototype.checkGameEndingConditions = function () {
-  if (this.tiles.length == 16 && !this.anyMovesLeft()) {
-    this.gameOver();
-  }
-  for (tile in this.tiles) {
+  $.each(this.tiles, function(index, tile) {
     if (tile.value === 2048 && !this.victory) {
       this.playerWins();
     }
+  })
+  
+  if (this.tiles.length == 16 && !this.anyMovesLeft()) {
+   this.gameOver();
   }
 }
 
@@ -142,16 +138,18 @@ Game.prototype.resetBoard = function () {
   this.tiles = [];
   this.init();
 }
+*/
 
 // ***** Tiles Section *****
 function Tile (value, location) {
   this.value    = value;
-  this.location = location;
+  this.row      = location[0];
+  this.column   = location[1];
   this.updateView();
 }
 
 Tile.prototype.updateView = function () {
-  this.$view = $('#' + this.location)
+  this.$view = $('#' + this.row + '' + this.column)
     .addClass('tile-' + this.value)
     .html('<p>' + this.value + '</p>');
 }
