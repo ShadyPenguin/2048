@@ -79,19 +79,21 @@ Game.prototype.enablePlayerControls = function () {
   var self = this;
 
   $(document).on('keyup', function (e) {
-    if (e.which=== 37) {
-      self.moveLeft();
+    switch (e.keyCode) {
+      case 37:
+        self.moveLeft();
+        break;
+      case 38:
+        self.moveUp();
+        break;
+      case 39:
+        self.moveRight();
+        break;
+      case 40:
+        self.moveDown();
+        break;
     }
-    else if (e.which=== 38) {
-      self.moveUp();
-    }
-    else if (e.which=== 39) {
-      self.moveRight();
-    }
-    else if (e.which=== 40) {
-      self.moveDown();
-    }
-  })
+  });
 }
 
 Game.prototype.disablePlayerControls = function () {
@@ -101,7 +103,6 @@ Game.prototype.moveLeft = function () {
   $.each(this.tiles, function(index, tile) {
     tile.column -= 1;
   })
-  this.addNewTile();
   this.updateView();
 }
 
@@ -109,7 +110,6 @@ Game.prototype.moveRight = function () {
   $.each(this.tiles, function(index, tile) {
     tile.column += 1;
   })
-  this.addNewTile();
   this.updateView();
 }
 
@@ -117,7 +117,6 @@ Game.prototype.moveUp = function () {
   $.each(this.tiles, function(index, tile) {
     tile.row -= 1;
   })
-  this.addNewTile();
   this.updateView();
 }
 
@@ -125,7 +124,6 @@ Game.prototype.moveDown = function () {
   $.each(this.tiles, function(index, tile) {
     tile.row += 1;
   })
-  this.addNewTile();
   this.updateView();
 }
 
