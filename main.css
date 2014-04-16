@@ -39,6 +39,9 @@
 }
 
 .tile-2 {
-  position: absolute;
   background-color: green;
+}
+
+.tile-4 {
+  background-color: yellow;
 }
