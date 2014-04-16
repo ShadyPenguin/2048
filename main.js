@@ -51,8 +51,12 @@ Game.prototype.updateView = function () {
     tile;
 
   $('p').remove();
+
   $.each(this.tiles, function(index, tile) {
     tile.clearView();
+  });
+
+  $.each(this.tiles, function(index, tile) {
     tile.updateView();
   });
 }
