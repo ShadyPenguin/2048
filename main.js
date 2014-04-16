@@ -52,12 +52,12 @@ Game.prototype.updateView = function () {
 
   $('p').remove();
 
-  $.each(this.tiles, function(index, tile) {
-    tile.clearView();
+  $.each(this.tiles, function() {
+    this.clearView();
   });
 
-  $.each(this.tiles, function(index, tile) {
-    tile.updateView();
+  $.each(this.tiles, function() {
+    this.drawSelf();
   });
 }
 
@@ -104,29 +104,37 @@ Game.prototype.disablePlayerControls = function () {
 }
 
 Game.prototype.moveLeft = function () {
-  $.each(this.tiles, function(index, tile) {
-    tile.column -= 1;
+  $.each(this.tiles, function() {
+    if (this.column > 0) {
+      this.column -= 1;
+    }
   })
   this.updateView();
 }
 
 Game.prototype.moveRight = function () {
-  $.each(this.tiles, function(index, tile) {
-    tile.column += 1;
+  $.each(this.tiles, function() {
+    if (this.column < 3) {
+      this.column += 1;
+    }
   })
   this.updateView();
 }
 
 Game.prototype.moveUp = function () {
-  $.each(this.tiles, function(index, tile) {
-    tile.row -= 1;
+  $.each(this.tiles, function() {
+    if (this.row > 0) {
+      this.row -= 1;  
+    }
   })
   this.updateView();
 }
 
 Game.prototype.moveDown = function () {
-  $.each(this.tiles, function(index, tile) {
-    tile.row += 1;
+  $.each(this.tiles, function() {
+    if (this.row < 3) {
+      this.row += 1;    
+    }
   })
   this.updateView();
 }
@@ -175,10 +183,10 @@ function Tile (value, location) {
   this.value    = value;
   this.row      = location[0];
   this.column   = location[1];
-  this.updateView();
+  this.drawSelf();
 }
 
-Tile.prototype.updateView = function () {
+Tile.prototype.drawSelf = function () {
   this.$view = $('#' + this.row + '' + this.column)
     .addClass('tile-' + this.value)
     .html('<p>' + this.value + '</p>');
@@ -189,6 +197,10 @@ Tile.prototype.clearView = function () {
     .removeClass()
     .addClass('grid-cell')
     .html('');
+}
+
+Tile.prototype.wallOnRight = function () {
+  this.column === 3
 }
 
 // ***** Driver Code *****
