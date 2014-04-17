@@ -1,8 +1,3 @@
-// ***** Tasks *******
-//
-// improve tile movement intelligence
-//
-// ***** ----- *******
 var possibleTileValues          = [2, 4],
     possibleTileLocationIndices = ['0', '1', '2', '3'],
     allPossibleTileLocations    = {};
@@ -49,8 +44,9 @@ Game.prototype.updateView = function () {
 
   $('p').remove();
 
-  $.each(this.tiles, function() {
-    this.clearView();
+  $.each($('.grid-cell.tile'), function() {
+    $(this).removeClass()
+      .addClass('grid-cell');
   });
 
   $.each(this.tiles, function() {
@@ -108,6 +104,7 @@ Game.prototype.moveLeft = function () {
   var incomplete = true,
       tilesMoved;
 
+  this.sortTilesLeft();
   while (incomplete) {
     tilesMoved = 0;
     $.each(this.tiles, function() {
@@ -125,6 +122,7 @@ Game.prototype.moveUp = function () {
   var incomplete = true,
       tilesMoved;
 
+  this.sortTilesUp();
   while (incomplete) {
     tilesMoved = 0;
     $.each(this.tiles, function() {
@@ -142,6 +140,7 @@ Game.prototype.moveRight = function () {
   var incomplete = true,
       tilesMoved;
 
+  this.sortTilesRight();
   while (incomplete) {
     tilesMoved = 0;
     $.each(this.tiles, function() {
@@ -155,22 +154,79 @@ Game.prototype.moveRight = function () {
   }
 }
 
+// TODO: Actually make this legible
 Game.prototype.moveDown = function () {
   var incomplete = true,
-      tilesMoved;
+      tilesMoved,
+      nextTile,
+      self = this;
 
+  this.sortTilesDown();
   while (incomplete) {
     tilesMoved = 0;
+
+    // iterate through each tile on the board
     $.each(this.tiles, function() {
-      if (this.row < 3 && !this.collisionDown()) {
-        this.row += 1;
-        tilesMoved += 1;
+      movingTile = this;
+
+      // If it isn't on the bottom row
+      if (this.row < 3) {
+
+        // If it is going to collide with another tile
+        if (this.collisionDown()) {
+          nextTile = $.grep(self.tiles, function (tile) {
+            return tile.row === movingTile.row + 1 && tile.column === movingTile.column
+          })
+
+          // If the moving tile and collided tile have the same value
+          if (nextTile[0].value === this.value && nextTile[0].merged === false) {
+            console.log(this)
+
+            // delete from tiles array
+            self.tiles.splice(self.tiles.indexOf(this), 1);
+            // double static tile value
+            nextTile[0].value *= 2;
+            nextTile[0].merged = true;
+          }
+        } else {
+          movingTile.row += 1;
+          tilesMoved += 1;
+        }
       }
+      self.updateView();
     });
     if (tilesMoved === 0) incomplete = false;
     this.updateView();
   }
+  $.each(this.tiles, function () {
+    this.merged = false;
+  })
 }
+
+Game.prototype.sortTilesLeft = function() {
+  this.tiles.sort(function (tile1, tile2) {
+    return tile1.column - tile2.column
+  });
+}
+
+Game.prototype.sortTilesUp = function() {
+  this.tiles.sort(function (tile1, tile2) {
+    return tile1.row - tile2.row
+  });
+}
+
+Game.prototype.sortTilesRight = function() {
+  this.tiles.sort(function (tile1, tile2) {
+    return tile2.column - tile1.column
+  });
+}
+
+Game.prototype.sortTilesDown = function() {
+  this.tiles.sort(function (tile1, tile2) {
+    return tile2.row - tile1.row
+  });
+}
+
 
 Game.prototype.checkForPossibleMoves = function () {
   // more core game logicsss
@@ -216,21 +272,18 @@ function Tile (value, location) {
   this.value    = value;
   this.row      = parseInt(location[0]);
   this.column   = parseInt(location[1]);
-  this.drawSelf();
+  this.merged   = false;
+  this.drawSelf('new');
 }
 
-Tile.prototype.drawSelf = function () {
+Tile.prototype.drawSelf = function (isNew) {
   this.$view = $('#' + this.row + '' + this.column)
     .addClass('tile')
     .addClass('tile-' + this.value)
+    .addClass(isNew)
     .html('<p>' + this.value + '</p>');
-}
 
-Tile.prototype.clearView = function () {
-  this.$view
-    .removeClass()
-    .addClass('grid-cell')
-    .html('');
+  if (this.merged) this.$view.addClass('merged');
 }
 
 Tile.prototype.collisionLeft = function () {
