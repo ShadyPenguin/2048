@@ -64,7 +64,7 @@ Game.prototype.setTileValue = function () {
 
 Game.prototype.setTileLocation = function () {
   var keys,
-      availableLocations = allPossibleTileLocations;
+      availableLocations = jQuery.extend(true, {}, allPossibleTileLocations);
 
   // Deletes each 'occupied' tile location of the board from possible options
   $.each(this.tiles, function() {
@@ -83,15 +83,19 @@ Game.prototype.enablePlayerControls = function () {
     switch (e.keyCode) {
       case 37:
         self.moveLeft();
+        self.addNewTile();
         break;
       case 38:
         self.moveUp();
+        self.addNewTile();
         break;
       case 39:
         self.moveRight();
+        self.addNewTile();
         break;
       case 40:
         self.moveDown();
+        self.addNewTile();
         break;
     }
   });
