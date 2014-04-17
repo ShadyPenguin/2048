@@ -1,13 +1,10 @@
 // ***** Tasks *******
 //
 // improve tile movement intelligence
-// Weird behavior of tile movement:
-//   - Required to move left before you can move right
-//   - Required to move up before you can move down
-//  
+//
 // ***** ----- *******
 var possibleTileValues          = [2, 4],
-    possibleTileLocationIndices = [0, 1, 2, 3],
+    possibleTileLocationIndices = ['0', '1', '2', '3'],
     allPossibleTileLocations    = {};
 
 // ***** Game Section *****
@@ -70,8 +67,8 @@ Game.prototype.setTileLocation = function () {
       availableLocations = allPossibleTileLocations;
 
   // Deletes each 'occupied' tile location of the board from possible options
-  $.each(this.tiles, function(index, tile) {
-    delete availableLocations[tile.row + tile.column]
+  $.each(this.tiles, function() {
+    delete availableLocations[this.row + '' + this.column]
   })
 
   // Select a value from a random key in availableLocations array
@@ -105,36 +102,38 @@ Game.prototype.disablePlayerControls = function () {
 
 Game.prototype.moveLeft = function () {
   $.each(this.tiles, function() {
-    if (this.column > 0) {
-      this.column -= 1;
-    }
-  })
-  this.updateView();
-}
-
-Game.prototype.moveRight = function () {
-  $.each(this.tiles, function() {
-    if (this.column < 3) {
-      this.column += 1;
-    }
+    if (this.column > 0 && !this.collisionLeft()) this.column -= 1;
   })
   this.updateView();
 }
 
 Game.prototype.moveUp = function () {
   $.each(this.tiles, function() {
-    if (this.row > 0) {
-      this.row -= 1;  
-    }
+    if (this.row > 0 && !this.collisionUp()) this.row -= 1;
   })
+  this.updateView();
+}
+
+Game.prototype.moveRight = function () {
+  var incomplete = true,
+      tilesMoved;
+
+  // while (incomplete) {
+  //   tilesMoved = 0;
+  //   $.each(this.tiles, function() {
+  //     if (this.column < 3 && !this.collisionRight()) {
+  //       this.column += 1;
+  //       tilesMoved += 1;
+  //     } 
+  //   })
+  //   if (tilesMoved === 0) incomplete = false;
+  // }
   this.updateView();
 }
 
 Game.prototype.moveDown = function () {
   $.each(this.tiles, function() {
-    if (this.row < 3) {
-      this.row += 1;    
-    }
+    if (this.row < 3 && !this.collisionDown()) this.row += 1;    
   })
   this.updateView();
 }
@@ -181,13 +180,14 @@ Game.prototype.resetBoard = function () {
 // ***** Tiles Section *****
 function Tile (value, location) {
   this.value    = value;
-  this.row      = location[0];
-  this.column   = location[1];
+  this.row      = parseInt(location[0]);
+  this.column   = parseInt(location[1]);
   this.drawSelf();
 }
 
 Tile.prototype.drawSelf = function () {
-  this.$view = $('#' + this.row + '' + this.column)
+  this.$view = $('#' + this.row + '' + this.column) 
+    .addClass('tile')
     .addClass('tile-' + this.value)
     .html('<p>' + this.value + '</p>');
 }
@@ -199,10 +199,21 @@ Tile.prototype.clearView = function () {
     .html('');
 }
 
-Tile.prototype.wallOnRight = function () {
-  this.column === 3
+Tile.prototype.collisionLeft = function () {
+  return $('#' + this.row + '' + (this.column - 1) ).hasClass('tile')  
 }
 
+Tile.prototype.collisionUp = function () {
+  return $('#' + (this.row - 1) + '' + this.column).hasClass('tile')
+}
+
+Tile.prototype.collisionRight = function () {
+  return $('#' + this.row + '' + (this.column + 1) ).hasClass('tile')
+}
+
+Tile.prototype.collisionDown = function () {
+  return $('#' + (this.row + 1) + '' + this.column).hasClass('tile')
+}
 // ***** Driver Code *****
 $(function() {
   game = new Game();
