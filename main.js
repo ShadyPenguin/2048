@@ -101,41 +101,71 @@ Game.prototype.disablePlayerControls = function () {
 }
 
 Game.prototype.moveLeft = function () {
-  $.each(this.tiles, function() {
-    if (this.column > 0 && !this.collisionLeft()) this.column -= 1;
-  })
-  this.updateView();
+  var incomplete = true,
+      tilesMoved;
+
+  while (incomplete) {
+    tilesMoved = 0;
+    $.each(this.tiles, function() {
+      if (this.column > 0 && !this.collisionLeft()) {
+        this.column -= 1;
+        tilesMoved += 1;
+      }
+    });
+    if (tilesMoved === 0) incomplete = false;
+    this.updateView();
+  }
 }
 
 Game.prototype.moveUp = function () {
-  $.each(this.tiles, function() {
-    if (this.row > 0 && !this.collisionUp()) this.row -= 1;
-  })
-  this.updateView();
+  var incomplete = true,
+      tilesMoved;
+
+  while (incomplete) {
+    tilesMoved = 0;
+    $.each(this.tiles, function() {
+      if (this.row > 0 && !this.collisionUp()) {
+        this.row -= 1;
+        tilesMoved += 1;
+      }
+    });
+    if (tilesMoved === 0) incomplete = false;
+    this.updateView();
+  }
 }
 
 Game.prototype.moveRight = function () {
   var incomplete = true,
       tilesMoved;
 
-  // while (incomplete) {
-  //   tilesMoved = 0;
-  //   $.each(this.tiles, function() {
-  //     if (this.column < 3 && !this.collisionRight()) {
-  //       this.column += 1;
-  //       tilesMoved += 1;
-  //     } 
-  //   })
-  //   if (tilesMoved === 0) incomplete = false;
-  // }
-  this.updateView();
+  while (incomplete) {
+    tilesMoved = 0;
+    $.each(this.tiles, function() {
+      if (this.column < 3 && !this.collisionRight()) {
+        this.column += 1;
+        tilesMoved += 1;
+      }
+    });
+    if (tilesMoved === 0) incomplete = false;
+    this.updateView();
+  }
 }
 
 Game.prototype.moveDown = function () {
-  $.each(this.tiles, function() {
-    if (this.row < 3 && !this.collisionDown()) this.row += 1;    
-  })
-  this.updateView();
+  var incomplete = true,
+      tilesMoved;
+
+  while (incomplete) {
+    tilesMoved = 0;
+    $.each(this.tiles, function() {
+      if (this.row < 3 && !this.collisionDown()) {
+        this.row += 1;
+        tilesMoved += 1;
+      }
+    });
+    if (tilesMoved === 0) incomplete = false;
+    this.updateView();
+  }
 }
 
 Game.prototype.checkForPossibleMoves = function () {
@@ -153,7 +183,7 @@ Game.prototype.checkGameEndingConditions = function () {
       this.playerWins();
     }
   })
-  
+
   if (this.tiles.length == 16 && !this.anyMovesLeft()) {
    this.gameOver();
   }
@@ -186,7 +216,7 @@ function Tile (value, location) {
 }
 
 Tile.prototype.drawSelf = function () {
-  this.$view = $('#' + this.row + '' + this.column) 
+  this.$view = $('#' + this.row + '' + this.column)
     .addClass('tile')
     .addClass('tile-' + this.value)
     .html('<p>' + this.value + '</p>');
@@ -200,7 +230,7 @@ Tile.prototype.clearView = function () {
 }
 
 Tile.prototype.collisionLeft = function () {
-  return $('#' + this.row + '' + (this.column - 1) ).hasClass('tile')  
+  return $('#' + this.row + '' + (this.column - 1) ).hasClass('tile')
 }
 
 Tile.prototype.collisionUp = function () {
