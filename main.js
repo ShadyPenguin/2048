@@ -101,67 +101,30 @@ Game.prototype.disablePlayerControls = function () {
 }
 
 Game.prototype.moveLeft = function () {
-  var incomplete = true,
-      tilesMoved;
-
-  this.sortTilesLeft();
-  while (incomplete) {
-    tilesMoved = 0;
-    $.each(this.tiles, function() {
-      if (this.column > 0 && !this.collisionLeft()) {
-        this.column -= 1;
-        tilesMoved += 1;
-      }
-    });
-    if (tilesMoved === 0) incomplete = false;
-    this.updateView();
-  }
+  this.move("column", -1, 0, "Left");
 }
 
 Game.prototype.moveUp = function () {
-  var incomplete = true,
-      tilesMoved;
-
-  this.sortTilesUp();
-  while (incomplete) {
-    tilesMoved = 0;
-    $.each(this.tiles, function() {
-      if (this.row > 0 && !this.collisionUp()) {
-        this.row -= 1;
-        tilesMoved += 1;
-      }
-    });
-    if (tilesMoved === 0) incomplete = false;
-    this.updateView();
-  }
+  this.move("row", -1, 0, "Up");
 }
 
 Game.prototype.moveRight = function () {
-  var incomplete = true,
-      tilesMoved;
-
-  this.sortTilesRight();
-  while (incomplete) {
-    tilesMoved = 0;
-    $.each(this.tiles, function() {
-      if (this.column < 3 && !this.collisionRight()) {
-        this.column += 1;
-        tilesMoved += 1;
-      }
-    });
-    if (tilesMoved === 0) incomplete = false;
-    this.updateView();
-  }
+  this.move("column", 1, 3, "Right");
 }
 
-// TODO: Actually make this legible
 Game.prototype.moveDown = function () {
-  var incomplete = true,
+  this.move("row", 1, 3, "Down");
+}
+
+Game.prototype.move = function (rowOrColumn, spacesToMove, borderIndex, direction) {
+  var collisionFunction = "collision" + direction,
+      sortFunction = "sortTiles" + direction,
+      incomplete = true,
       tilesMoved,
       nextTile,
       self = this;
 
-  this.sortTilesDown();
+  this[sortFunction]();
   while (incomplete) {
     tilesMoved = 0;
 
@@ -170,17 +133,16 @@ Game.prototype.moveDown = function () {
       movingTile = this;
 
       // If it isn't on the bottom row
-      if (this.row < 3) {
+      if (this.atBorder(rowOrColumn, borderIndex)) {
 
         // If it is going to collide with another tile
-        if (this.collisionDown()) {
+        if (this[collisionFunction]()) {
           nextTile = $.grep(self.tiles, function (tile) {
-            return tile.row === movingTile.row + 1 && tile.column === movingTile.column
+            return tile.isNextTile(movingTile.row, movingTile.column, rowOrColumn, spacesToMove);
           })
 
           // If the moving tile and collided tile have the same value
           if (nextTile[0].value === this.value && nextTile[0].merged === false) {
-            console.log(this)
 
             // delete from tiles array
             self.tiles.splice(self.tiles.indexOf(this), 1);
@@ -189,7 +151,7 @@ Game.prototype.moveDown = function () {
             nextTile[0].merged = true;
           }
         } else {
-          movingTile.row += 1;
+          movingTile[rowOrColumn] += spacesToMove; // Negative for left and up
           tilesMoved += 1;
         }
       }
@@ -301,6 +263,26 @@ Tile.prototype.collisionRight = function () {
 Tile.prototype.collisionDown = function () {
   return $('#' + (this.row + 1) + '' + this.column).hasClass('tile')
 }
+
+Tile.prototype.isNextTile = function (movingTileRow, movingTileColumn, rowOrColumn, spacesToMove) {
+  if(rowOrColumn === "row") {
+    movingTileRow += spacesToMove;
+  } else if (rowOrColumn === "column") {
+    movingTileColumn += spacesToMove;
+  }
+
+  return this.row === movingTileRow && this.column === movingTileColumn;
+}
+
+
+Tile.prototype.atBorder = function (rowOrColumn, borderIndex) {
+  if (borderIndex > 0) {
+    return this[rowOrColumn] < borderIndex
+  } else {
+    return this[rowOrColumn] > borderIndex
+  }
+}
+
 // ***** Driver Code *****
 $(function() {
   game = new Game();
